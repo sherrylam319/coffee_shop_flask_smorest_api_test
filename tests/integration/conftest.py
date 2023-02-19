@@ -39,6 +39,7 @@ def created_product_id(client, create_store_id):
 def registered_user_info(client):
     username = "sherry"
     password = "1234"
+
     client.post("/register", json={
         "username": "sherry",
         "password": "1234"

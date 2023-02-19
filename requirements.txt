@@ -7,4 +7,5 @@ flask-jwt-extended
 passlib
 flask-migrate
 pytest
+flask-blacklist
 

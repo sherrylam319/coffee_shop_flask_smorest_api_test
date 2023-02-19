@@ -1,7 +1,7 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
-##from flask_jwt_extended import jwt_required, get_jwt
+from flask_jwt_extended import jwt_required, get_jwt
 
 from db import db
 from models import ProductModel
@@ -18,6 +18,7 @@ class Products(MethodView):
         product = ProductModel.query.get_or_404(product_id)
         return product
 
+    @jwt_required(fresh=True)
     def delete(self, product_id):
         product = ProductModel.query.get_or_404(product_id)
 
@@ -25,7 +26,7 @@ class Products(MethodView):
         db.session.commit()
         return {"message": "Product deleted"}
 
-
+    @jwt_required(fresh=False)
     @blp.arguments(ProductUpdateSchema)
     @blp.response(200, ProductSchema)
     def put(self, product_data, product_id):
@@ -33,6 +34,7 @@ class Products(MethodView):
         if product:
             product.price = product_data["price"]
             product.name = product_data["name"]
+            product.store_id = product_data["store_id"]
         else:
             product = ProductModel(id=product_id, **product_data)
 
